@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
     String API_KEY = "dvd019NCpaUCWn8TeIH96lX6B";
     String API_SECRET = "rPUMGtsPsn6ucH0qnLB0Bh33u3pVi3Xj36zWYxZzeo99lIsSXB";
     String CLIENT_ID = "5b86f05a70970ac9932055ae65b4cfdd63c25b6a52a53d67a31420153378374a";
-    String CLIENT_SECRET = "hJ1WUVPlRwztNOX1PVNB24swiGKlQ1vn";
     String REDIRECT_URI = "chirpcoin://coinbase-oauth";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
-        textView1 = (TextView) findViewById(R.id.textView1);
-        final TextView textView2 = (TextView) findViewById(R.id.textView2);
-        Button button = (Button)findViewById(R.id.button);
+        textView1 = (TextView) findViewById(R.id.textViewListening);
+        Button button = (Button)findViewById(R.id.buttonLogin);
+        final EditText editText = (EditText)findViewById(R.id.editTextAmount);
 
         setSupportActionBar(toolbar);
 
@@ -55,13 +54,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     OAuth.beginAuthorization(MainActivity.this, CLIENT_ID, "user", REDIRECT_URI, null);
-                    textView2.setText("Success");
+                    textView1.setText("Success");
                 } catch (CoinbaseException e) {
                     e.getStackTrace();
                 }
             }
         });
-
 
         //ChirpCoin
         chirpSDK = new ChirpSDK(this, API_KEY, API_SECRET);
@@ -72,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                 chirpSDK.read(shortCode, new CallbackRead() {
                     @Override
                     public void onReadResponse(final Chirp chirp) {
-//                        try {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -80,10 +77,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         Log.e("onReadResponse", chirp.getJsonData().toString());
-
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
                     }
 
                     @Override
@@ -104,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 JSONObject jsonObj = new JSONObject();
                 try {
-                    jsonObj.put("amount", "127");
-                    jsonObj.put("currency", "btc");
+                    jsonObj.put("name", "Martin Losak");
+                    jsonObj.put("address", "1CrgTPwJ57ZNTE9XU51q2ErxUUt6JYwcuu");
+                    jsonObj.put("amount", editText.getText().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
